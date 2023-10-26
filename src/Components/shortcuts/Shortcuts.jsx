@@ -17,13 +17,13 @@ const Shorcuts = () => {
             <HeaderButton name="spring1" />
             <div className="container-he">
                 <ol className='list-style-ol' >
-                    <li>Home Press H</li>
-                    <li>Female Read Loud Press F</li>
-                    <li>Male Voice Loud Press M</li>
-                    <li>ShortCuts Press S</li>
+                    <li>Home Press h </li>
+                    <li>Female Read Loud Press f </li>
+                    <li>Male Voice Loud Press m </li>
+                    <li>ShortCuts Press s </li>
                     <li>Statistical Calculator c</li>
-                    <li>Bar Graph Visualization B</li>
-                    <li>Audiable Bar Graph A</li>
+                    <li>Bar Graph Visualization ctrl + b </li>
+                    <li>Audiable Bar Graph a </li>
                 </ol>
             </div>
         </>
