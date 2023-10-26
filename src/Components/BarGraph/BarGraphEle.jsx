@@ -31,10 +31,17 @@ const BarGraphEle = () => {
   const handleYaxis = (val) => {
     setYColumn(val);
   };
+  const getUniqueXValues = () => {
+    if (xColumn) {
+      const uniqueXValues = Array.from(new Set(excelData.map(row => row[xColumn])))
+      return uniqueXValues;
+    }
+    return [];
+  };
 
-  const filteredData = excelData.map(row => ({
-    xValue: row[xColumn],
-    yValue: row[yColumn],
+  const filteredData = getUniqueXValues().map(xValue => ({
+    xValue: xValue,
+    yValue: excelData.filter(row => row[xColumn] === xValue)[0][yColumn],
   }));
 
   const handleKeyPress = (event) => {
@@ -42,7 +49,7 @@ const BarGraphEle = () => {
       // Stop speech when "B" key is pressed
       stopSpeech();
     }
-    if (event.key === 'v') {
+    if (event.key === 'a') {
       readSelectedData();
     }
   };
@@ -59,14 +66,24 @@ const BarGraphEle = () => {
   };
 
   const readSelectedData = () => {
+    alert('You are in Undisturb Mode')
     if (xColumn && yColumn) {
-      const selectedXData = excelData.map(row => row[xColumn]).join(", ");
-      const selectedYData = excelData.map(row => row[yColumn]).join(", ");
-      const text = `Selected X-axis data: ${selectedXData}. Selected Y-axis data: ${selectedYData}.`;
+      const uniqueXValues = Array.from(new Set(filteredData.map(item => item.xValue)));
+      const selectedData = uniqueXValues.map(xValue => {
+        const matchingItem = filteredData.find(item => item.xValue === xValue);
+        return `${xValue}: ${matchingItem ? matchingItem.yValue : 'N/A'}`;
+      });
+
+      const dataDescription = selectedData.length > 0
+        ? `Selected data: ${selectedData.join(", ")}.`
+        : 'No data selected.';
+
+      const text = `${dataDescription} X-axis: ${xColumn}, Y-axis: ${yColumn}.`;
       speakText(text);
       setSpeaking(true);
     }
   };
+
 
   useEffect(() => {
     // Add the event listener when the component mounts
@@ -81,21 +98,21 @@ const BarGraphEle = () => {
   return (
     <>
       <HeaderButton />
-    { excelData.length>0&& <button
-            onClick={readSelectedData}
-            style={{
-              backgroundColor: "rgb(160, 186, 211)",
-              color: "white",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              position:'relative',
-              left:'50%'
-            }}
-          >
-           Audiable Graph
-          </button>}
+      {excelData.length > 0 && <button
+        onClick={readSelectedData}
+        style={{
+          backgroundColor: "rgb(160, 186, 211)",
+          color: "white",
+          padding: "10px 20px",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          position: 'relative',
+          left: '50%'
+        }}
+      >
+        Audible Graph
+      </button>}
       <div className="graph-container">
         <div className="box-1">
           <ColumnSelectComp
@@ -110,7 +127,7 @@ const BarGraphEle = () => {
             onClick={handleYaxis}
             selectedColumn={yColumn}
           />
-         
+
         </div>
         <div className="graph">
           <h3>Bar Graph Element</h3>
@@ -122,8 +139,13 @@ const BarGraphEle = () => {
               stroke="#56829a"
               strokeWidth={1}
             />
-            <XAxis dataKey="xValue" label={{ value: "X-Axis", position: "insideBottom" }} tick={{ fill: "#a0bad3" }} />
-            <YAxis
+            <XAxis
+              dataKey="xValue"
+              label={{ value: "X-Axis", position: "insideBottom" }}
+              tick={{ fill: "#a0bad3" }}
+
+            />
+           <YAxis
               label={{
                 value: "Y-Axis",
                 angle: -90,
@@ -167,3 +189,4 @@ const ColumnSelectComp = ({ excelData, axis, onClick, selectedColumn }) => {
     </>
   );
 };
+export { ColumnSelectComp }
