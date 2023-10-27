@@ -11,18 +11,22 @@ import {
 } from "@mui/material";
 import { Box } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { ColumnSelectComp } from "../BarGraph/BarGraphEle";
+import useSpeech from "../keyboardShorcut/textToSpeech";
 
 const Statistical = () => {
+  const { stopSpeech } = useSpeech()
   const excelData = useSelector((state) => state.excelData.data);
   const [jobTitleCounts, setJobTitleCounts] = useState({});
   const [mean, setMean] = useState(null);
   const [mode, setMode] = useState(null);
+  const [xColumn, setXColumn] = useState('');
 
   useEffect(() => {
     const counts = {};
 
     excelData.forEach((row) => {
-      const jobTitle = row["Job Title"];
+      const jobTitle = row[xColumn];
 
       if (!counts[jobTitle]) {
         counts[jobTitle] = 1;
@@ -32,10 +36,10 @@ const Statistical = () => {
     });
 
     setJobTitleCounts(counts);
-  }, [excelData]);
+  }, [excelData, xColumn]);
 
   useEffect(() => {
-    const jobTitles = excelData.map((row) => row["Job Title"]);
+    const jobTitles = excelData.map((row) => row[xColumn]);
 
     const totalRecords = excelData.length;
     const totalJobTitles = Object.keys(jobTitleCounts).length;
@@ -74,18 +78,32 @@ const Statistical = () => {
   };
 
   const generateAudibleDescription = () => {
+    alert('You are in Undisturb Mode')
     const totalRecords = excelData.length;
     const totalJobTitles = Object.keys(jobTitleCounts).length;
 
     const mostCommonJobTitle = mode ? `The most common records ${mode}.` : 'There is no predominant job title.';
+    const description = `There are ${totalRecords} records and ${totalJobTitles} most records are in the data is ${mostCommonJobTitle} The data consists of ${excelData.length} rows and ${excelData.length > 0 ? Object.keys(excelData[0]).length : 0} columns. Thanks `;
 
-    return `There are ${totalRecords} records and ${totalJobTitles} most records are in the data is ${mode} The data consists of ${excelData.length} rows and ${excelData.length > 0 ? Object.keys(excelData[0]).length : 0} columns.`;
+
+
+    return description;
   };
+
+
+  const handleXaxis = (val) => {
+    setXColumn(val);
+  };
+
+
 
   useEffect(() => {
     const handleKeyPress = (event) => {
       if (event.key === "v") {
         handleAudibleDescription();
+      }
+      if (event.key === "b") {
+        stopSpeech();
       }
     };
 
@@ -101,47 +119,84 @@ const Statistical = () => {
       <HeaderButton />
       
       <ol className="m-auto" style={{ margin: 'auto', width: 'fit-content', padding: '10px' }}>
-        <li>Total No of Records : - {excelData.length}</li>
-        <li>Total No of Post :- {Object.keys(jobTitleCounts).length}</li>
-        <li>Most of Records are :- {mode&&mode}</li>
-        <li>Total Number of Columns: {excelData.length > 0 ? Object.keys(excelData[0]).length : 0}</li>
-        <li>Total Number of Rows: {excelData.length-1}</li>
+        <li>Total No of Records in Excel Sheet : - {excelData.length}</li>
+        <li>Total No :- {Object.keys(jobTitleCounts).length}</li>
+        <li>Most of Records are :- {mode && mode}</li>
+        <li>Total Number of Columns in Excel Sheet: {excelData.length > 0 ? Object.keys(excelData[0]).length : 0}</li>
+        <li>Total Number of Rows in Excel Sheet: {excelData.length - 1}</li>
         {/* <li>Mean of all Records: {mean>0&&mean.toFixed(2)}</li> */}
       </ol>
-      <Box>
+      {excelData.length > 0 && <button
+        onClick={handleAudibleDescription}
+        style={{
+          backgroundColor: "rgb(160, 186, 211)",
+          color: "white",
+          padding: "10px 20px",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          position: 'relative',
+          left: '50%'
+        }}
+      >
+        Audible Statical
+      </button>}
+      <div className="graph-container">
+        <div className="box-1">
+          <ColumnSelectComp
+            axis='Select Column'
+            excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
+            onClick={handleXaxis}
+            selectedColumn={xColumn}
+          />
+          {/* <ColumnSelectComp
+            axis='Y-Axis'
+            excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
+            onClick={handleYaxis}
+            selectedColumn={yColumn}
+          /> */}
+
+        </div>
+
         {excelData.length > 0 && (
           <div className="table-responsive">
-            <TableContainer>
-              <Table stickyHeader>
-                <TableHead>
-                  <TableRow>
-                    <TableCell style={{ fontSize: "15px", fontWeight: "600", background: "ffd8d8" }}>
-                      Job Title
-                    </TableCell>
-                    <TableCell style={{ fontSize: "15px", fontWeight: "600", background: "ffd8d8" }}>
-                      Count
-                    </TableCell>
-                    <TableCell style={{ fontSize: "15px", fontWeight: "600", background: "ffd8d8" }}>
-                      Mean
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {Object.keys(jobTitleCounts).map((jobTitle, index) => (
-
-                    <TableRow key={index}>
-                      {console.log(jobTitle)}
-                      <TableCell>{jobTitle}</TableCell>
-                      <TableCell>{jobTitleCounts[jobTitle]}</TableCell>
-                      <TableCell>{(jobTitleCounts[jobTitle]/Object.keys(jobTitleCounts).length).toFixed(2)}</TableCell>
+            <div className="container">
+              <TableContainer>
+                <Table stickyHeader>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell style={{ fontSize: "15px", fontWeight: "600", background: "ffd8d8" }}>
+                        Selected Column
+                      </TableCell>
+                      <TableCell style={{ fontSize: "15px", fontWeight: "600", background: "ffd8d8" }}>
+                        Total
+                      </TableCell>
+                      <TableCell style={{ fontSize: "15px", fontWeight: "600", background: "ffd8d8" }}>
+                        Percentage %
+                      </TableCell>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                  </TableHead>
+                  {xColumn.length > 0 &&
+                    <TableBody>
+                      {Object.keys(jobTitleCounts).map((jobTitle, index) => (
+
+                        <TableRow key={index}>
+                          {/* {console.log(jobTitle)} */}
+                          <TableCell>{jobTitle}</TableCell>
+                          <TableCell>{jobTitleCounts[jobTitle]}</TableCell>
+                          <TableCell>{(jobTitleCounts[jobTitle] * 100 / excelData.length).toFixed(2)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  }
+                </Table>
+              </TableContainer>
+            </div>
           </div>
         )}
-      </Box>
+
+      </div>
+
     </>
   );
 };
