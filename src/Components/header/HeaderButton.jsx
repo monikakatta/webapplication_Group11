@@ -131,6 +131,8 @@ const HeaderButton = ({ name }) => {
         onKeyPress={handleKeyPress} // Handle key press events
       >
 
+<center><h1 style={{ color:"#a0bad3" }}>Inclusivity in Data Visualization</h1></center>
+
 
         <Box className="">
           <div className="topButtons navbar">
