@@ -5,6 +5,7 @@ import useSpeech from "../keyboardShorcut/textToSpeech";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
+import './shortcuts.css';
 
 
 
@@ -13,7 +14,7 @@ const Shorcuts = () => {
 
 
     return (
-        <>
+        <div className="Shortcutpage">
             <HeaderButton name="spring1" />
             <div className="container-he">
                 <ol className='list-style-ol' >
@@ -28,7 +29,7 @@ const Shorcuts = () => {
                     <li>Audiable Bar Graph a </li>
                 </ol>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -96,7 +96,7 @@ const BarGraphEle = () => {
   }, [xColumn, yColumn]);
 
   return (
-    <>
+    <div className="barpage">
       <HeaderButton />
       {excelData.length > 0 && <button
         onClick={readSelectedData}
@@ -161,7 +161,7 @@ const BarGraphEle = () => {
         <br />
         <br />
       </div>
-    </>
+    </div>
   );
 };
 

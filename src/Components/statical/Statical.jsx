@@ -13,6 +13,7 @@ import { Box } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { ColumnSelectComp } from "../BarGraph/BarGraphEle";
 import useSpeech from "../keyboardShorcut/textToSpeech";
+import './Statical.css'
 
 const Statistical = () => {
   const { stopSpeech } = useSpeech()
@@ -115,7 +116,7 @@ const Statistical = () => {
   }, []);
 
   return (
-    <>
+    <div className="Staticalpage">
       <HeaderButton />
       
       <ol className="m-auto" style={{ margin: 'auto', width: 'fit-content', padding: '10px' }}>
@@ -197,7 +198,7 @@ const Statistical = () => {
 
       </div>
 
-    </>
+    </div>
   );
 };
 
