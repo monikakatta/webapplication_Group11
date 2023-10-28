@@ -5,32 +5,33 @@ import useSpeech from "../keyboardShorcut/textToSpeech";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import './Shortcuts.css';
-
-
+import './shortcuts.css';
 
 const Shorcuts = () => {
-
-
+    const navigationList = [
+        "Home Press h",
+        "Female Read Loud Press f",
+        "Stop Voiceover b",
+        "Male Voice Loud Press m",
+        "ShortCuts Press s",
+        "Statistical Calculator c",
+        "Add New File n",
+        "Bar Graph Visualization ctrl + b",
+        "Audiable Bar Graph a",
+    ];
 
     return (
         <div className="Shortcutpage">
             <HeaderButton name="spring1" />
             <div className="container-he">
-                <ol className='list-style-ol' >
-                    <li>Home Press h </li>
-                    <li>Female Read Loud Press f </li>
-                    <li>Stop Voiceover b </li>
-                    <li>Male Voice Loud Press m </li>
-                    <li>ShortCuts Press s </li>
-                    <li>Statistical Calculator c</li>
-                    <li>Add New File n </li>
-                    <li>Bar Graph Visualization ctrl + b </li>
-                    <li>Audiable Bar Graph a </li>
+                <ol className='list-style-ol'>
+                    {navigationList.map((item, index) => (
+                        <li key={index}>{item}</li>
+                    ))}
                 </ol>
             </div>
         </div>
     )
 }
 
-export default Shorcuts
+export default Shorcuts;

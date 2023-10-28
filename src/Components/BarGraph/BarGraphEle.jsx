@@ -55,15 +55,7 @@ const BarGraphEle = () => {
   };
 
 
-  const speakText = (text) => {
-    if ("speechSynthesis" in window) {
-      const speechSynthesis = window.speechSynthesis;
-      const speechText = new SpeechSynthesisUtterance(text);
-      speechSynthesis.speak(speechText);
-    } else {
-      console.error("Text-to-speech not supported in this browser.");
-    }
-  };
+
 
   const readSelectedData = () => {
     alert('You are in Undisturb Mode')
@@ -79,6 +71,15 @@ const BarGraphEle = () => {
         : 'No data selected.';
 
       const text = `${dataDescription} X-axis: ${xColumn}, Y-axis: ${yColumn}.`;
+      const speakText = (text) => {
+        if ("speechSynthesis" in window) {
+          const speechSynthesis = window.speechSynthesis;
+          const speechText = new SpeechSynthesisUtterance(text);
+          speechSynthesis.speak(speechText);
+        } else {
+          console.error("Text-to-speech not supported in this browser.");
+        }
+      };
       speakText(text);
       setSpeaking(true);
     }

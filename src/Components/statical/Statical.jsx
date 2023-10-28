@@ -72,22 +72,20 @@ const Statistical = () => {
 
   const handleAudibleDescription = () => {
     if (window.speechSynthesis) {
-      const speechText = generateAudibleDescription();
+      const totalRecords = excelData.length;
+      const totalJobTitles = Object.keys(jobTitleCounts).length;
+      const speechText = generateAudibleDescription(mode, totalRecords, totalJobTitles);
       const utterance = new SpeechSynthesisUtterance(speechText);
       window.speechSynthesis.speak(utterance);
     }
   };
 
-  const generateAudibleDescription = () => {
-    alert('You are in Undisturb Mode')
-    const totalRecords = excelData.length;
-    const totalJobTitles = Object.keys(jobTitleCounts).length;
-
+  const generateAudibleDescription = (mode, totalRecords, totalJobTitles) => {
+    alert('You are in Undisturb Mode');
+    
     const mostCommonJobTitle = mode ? `The most common records ${mode}.` : 'There is no predominant job title.';
-    const description = `There are ${totalRecords} records and ${totalJobTitles} most records are in the data is ${mostCommonJobTitle} The data consists of ${excelData.length} rows and ${excelData.length > 0 ? Object.keys(excelData[0]).length : 0} columns. Thanks `;
-
-
-
+    const description = `There are ${totalRecords} records and ${totalJobTitles} most records are in the data is ${mostCommonJobTitle} The data consists of ${totalRecords} rows and ${totalRecords > 0 ? Object.keys(excelData[0]).length : 0} columns. Thanks `;
+  
     return description;
   };
 
