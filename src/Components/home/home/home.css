@@ -220,7 +220,7 @@ body{
     /* overflow: hidden; */
 }
 .list-style-ol{
-    /* font-size: 22px; */
+    font-size: 22px;
     color: white;
     display: flex;
     align-items: center;
@@ -228,6 +228,13 @@ body{
     /* justify-content: center; */
     text-align: left;
     flex-direction: column;
+}
+.list-style-ol li:hover {
+    color:#428BCA; /* Text color on hover */
+    padding: 5px; /* Add some padding for spacing inside the box */
+    border-radius: 5px; /* Rounded corners for the box */
+    cursor: pointer; /* Change cursor to a pointer on hover */
+    font-size: 40px;
 }
 
 ol li{
