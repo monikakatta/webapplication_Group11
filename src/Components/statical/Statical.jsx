@@ -140,7 +140,7 @@ const Statistical = () => {
           left: '50%'
         }}
       >
-        Audible Statical
+        Audible Statistics
       </button>}
       <div className="graph-container">
         <div className="box-1">
@@ -202,4 +202,4 @@ const Statistical = () => {
   );
 };
 
-export default Statistical;
+export default Statistical; 

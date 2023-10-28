@@ -65,6 +65,12 @@ const HeaderButton = ({ name }) => {
       // console.log('f')
       speakText(jsonLimitedData, 1);
     }
+    if (event.key === "f" || event.key === "m") {
+      alert('You are in Undisturb Mode');
+      const limitedData = excelData.slice(0, 100);
+      const jsonLimitedData = JSON.stringify(limitedData);
+      speakText(jsonLimitedData, event.key === "f" ? 2 : 1);
+    }
     if (event.key === "b") {
       stopSpeech(); // Trigger voice stop
     }
@@ -116,7 +122,7 @@ const HeaderButton = ({ name }) => {
 
   const [isOpen, setIsopen] = useState(false);
 
-  const ToggleSidebar = () => {
+  const toggleSidebar = () => {
     isOpen === true ? setIsopen(false) : setIsopen(true);
   }
 
@@ -144,7 +150,7 @@ const HeaderButton = ({ name }) => {
             <Button
               text="focused typography"
               backgroundColor={isButtonActive("/focused-typography") ? "#56829a" : "#a0bad3"}
-              onClick={ToggleSidebar}
+              onClick={toggleSidebar}
             />
             <Button
               text="statistical calculator"
@@ -184,7 +190,7 @@ const HeaderButton = ({ name }) => {
         </Box>
         <Sidebar
           isOpen={isOpen}
-          ToggleSidebar={ToggleSidebar}
+          toggleSidebar={toggleSidebar}
         />
       </div>
     </>
@@ -204,11 +210,11 @@ const Button = ({ text, backgroundColor, onClick }) => {
       {text}
     </button>
   );
-};
+}; 
 
 
 
-const Sidebar = ({ isOpen, ToggleSidebar }) => {
+const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const dispatch = useDispatch()
 
@@ -280,14 +286,14 @@ const Sidebar = ({ isOpen, ToggleSidebar }) => {
 
 
       <div className="container-fluid mt-3">
-        <div className="btn btn-primary iconOuter" onClick={ToggleSidebar}  >
+        <div className="btn btn-primary iconOuter" onClick={toggleSidebar}  >
           <i className="gg-chevron-double-right-r"></i>
         </div>
 
         <div className={`sidebar ${isOpen == true ? 'active' : ''}`}>
           <div className="sd-header">
             <h4 className="mb-0">Comfort Zone</h4>
-            <div className="btn btn-primary iconOuter" onClick={ToggleSidebar}><i className="gg-move-left"></i></div>
+            <div className="btn btn-primary iconOuter" onClick={toggleSidebar}><i className="gg-move-left"></i></div>
           </div>
           <div className="sd-body topButtons navbar ">
 
@@ -336,9 +342,8 @@ const Sidebar = ({ isOpen, ToggleSidebar }) => {
 
           </div>
         </div>
-        <div className={`sidebar-overlay ${isOpen == true ? 'active' : ''}`} onClick={ToggleSidebar}></div>
+        <div className={`sidebar-overlay ${isOpen == true ? 'active' : ''}`} onClick={toggleSidebar}></div>
       </div>
     </>
   )
 }
-
