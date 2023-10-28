@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import * as XLSX from "xlsx";
 import "./home.css";
 import { Box } from "@chakra-ui/react";
-
+import Papa from "papaparse"; // Import Papaparse for CSV handling
 
 import {
   Paper,
@@ -34,7 +34,26 @@ const Home = () => {
       setExcelFileError("Please select any file.");
       return;
     }
+    const fileName = selectedFile.name.toLowerCase();
+    const isCSV = fileName.endsWith(".csv"); // Check if it's a CSV file
 
+    if (isCSV) {
+      // Handle CSV file
+      Papa.parse(selectedFile, {
+        header: true,
+        skipEmptyLines: true,
+        complete: (result) => {
+          const csvData = result.data;
+          setExcelData(csvData.slice(0, 100)); // Limit to the top 100 rows
+          setDisplayedData(csvData.slice(0, 100)); // Initial display
+          dispatch(setExcelDataGlo(csvData));
+          setExcelFileError(null);
+        },
+        error: () => {
+          setExcelFileError("Error parsing the CSV file.");
+        },
+      });
+    }else{ 
     // Check if the selected file has one of the allowed file extensions
     const allowedExtensions = [".xlsx", ".xlsm", ".xlsb", ".xls"];
     const fileName = selectedFile.name.toLowerCase();
@@ -64,6 +83,7 @@ const Home = () => {
     fileReader.onerror = () => {
       setExcelFileError("Error reading the file.");
     };
+  }
   };
 
 
@@ -114,7 +134,7 @@ const Home = () => {
               <input
                 type="file"
                 className="form-control"
-                accept=".xlsx,.xls"
+                accept=".xlsx,.xls,.csv"
                 onChange={handleFile}
                 required
               ></input>
