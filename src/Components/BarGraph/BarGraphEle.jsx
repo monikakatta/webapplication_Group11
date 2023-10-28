@@ -119,13 +119,13 @@ const BarGraphEle = () => {
             axis='X-Axis'
             excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
             onClick={handleXaxis}
-            selectedColumn={xColumn}
+            selectedColumn={xColumn}   //fixed the all files working
           />
           <ColumnSelectComp
             axis='Y-Axis'
             excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
             onClick={handleYaxis}
-            selectedColumn={yColumn}
+            selectedColumn={yColumn} //fixed the all files working 
           />
 
         </div>

@@ -148,7 +148,7 @@ const Statistical = () => {
             axis='Select Column'
             excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
             onClick={handleXaxis}
-            selectedColumn={xColumn}
+            selectedColumn={xColumn} //fixed the all files working
           />
           {/* <ColumnSelectComp
             axis='Y-Axis'
@@ -182,7 +182,7 @@ const Statistical = () => {
                       {Object.keys(jobTitleCounts).map((jobTitle, index) => (
 
                         <TableRow key={index}>
-                          {/* {console.log(jobTitle)} */}
+                          {/* {console.log(jobTitle)}   //removed for sample file data */}
                           <TableCell>{jobTitle}</TableCell>
                           <TableCell>{jobTitleCounts[jobTitle]}</TableCell>
                           <TableCell>{(jobTitleCounts[jobTitle] * 100 / excelData.length).toFixed(2)}</TableCell>
