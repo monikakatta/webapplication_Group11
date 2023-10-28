@@ -29,10 +29,7 @@ const Home = () => {
         const worksheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[worksheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet);
-
-        setExcelData(jsonData.slice(0, 100)); // Limit to the top 100 rows
-        setDisplayedData(jsonData.slice(0, 100)); // Initial display
-        setExcelFileError(null);
+        updateExcelData(jsonData);
       } else if (fileName.endsWith(".csv")) {
         // Handle CSV files
         Papa.parse(data, {
@@ -40,9 +37,7 @@ const Home = () => {
           skipEmptyLines: true,
           complete: (result) => {
             const csvData = result.data;
-            setExcelData(csvData.slice(0, 100)); // Limit to the top 100 rows
-            setDisplayedData(csvData.slice(0, 100)); // Initial display
-            setExcelFileError(null);
+            updateExcelData(csvData);
           },
           error: () => {
             setExcelFileError("Error parsing the CSV file.");
@@ -54,6 +49,12 @@ const Home = () => {
     };
 
     fileReader.readAsArrayBuffer(selectedFile);
+  };
+  const updateExcelData = (data) => {
+    const limitedData = data.slice(0, 100); // Limit to the top 100 rows
+    setExcelData(limitedData);
+    setDisplayedData(limitedData);
+    setExcelFileError(null);
   };
 
   useEffect(() => {});

@@ -123,7 +123,8 @@ const HeaderButton = ({ name }) => {
   const [isOpen, setIsopen] = useState(false);
 
   const toggleSidebar = () => {
-    isOpen === true ? setIsopen(false) : setIsopen(true);
+    //isOpen === true ? setIsopen(false) : setIsopen(true); updated for refactoring
+    setIsopen((prevState) => !prevState);
   }
 
 
