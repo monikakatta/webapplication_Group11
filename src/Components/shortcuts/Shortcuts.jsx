@@ -5,7 +5,7 @@ import useSpeech from "../keyboardShorcut/textToSpeech";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import './shortcuts.css';
+import './Shortcuts.css';
 
 
 
