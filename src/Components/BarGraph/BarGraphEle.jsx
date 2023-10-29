@@ -133,7 +133,7 @@ const BarGraphEle = () => {
         <div className="graph">
           <h3>Bar Graph Element</h3>
           <br />
-          <BarChart width={1000} height={420} data={filteredData} style={{ margin: 'auto' }}>
+          <BarChart  width={1000} height={420} data={filteredData} style={{ margin: 'auto' }}>
             <CartesianGrid
               vertical={true}
               horizontal={false}
@@ -142,7 +142,7 @@ const BarGraphEle = () => {
             />
             <XAxis
               dataKey="xValue"
-              label={{ value: "X-Axis", position: "insideBottom" }}
+              label={{ value: "X-Axis", position: "Bottom"}}
               tick={{ fill: "#a0bad3" }}
 
             />
@@ -150,13 +150,14 @@ const BarGraphEle = () => {
               label={{
                 value: "Y-Axis",
                 angle: -90,
-                position: "insideLeft",
+                position: "Left",
+                
               }}
               tick={{ fill: "#a0bad3" }}
             />
             <Tooltip />
             <Legend />
-            <Bar dataKey="yValue" fill="white" />
+            <Bar dataKey="yValue" fill="#a0bad3" />
           </BarChart>
         </div>
         <br />
