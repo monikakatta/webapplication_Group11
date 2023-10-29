@@ -44,6 +44,15 @@ const HeaderButton = ({ name }) => {
       speechSynthesis.speak(utterance);
     }
   };
+  const changeFontSize = (delta) => {
+    const newFontSize = fontMode(font1 + delta);
+    dispatch(newFontSize);
+  };
+  const changeFontWeight = (delta) => {
+    const newWeight = weightMode(weight1 + delta);
+    dispatch(newWeight);
+  };
+  
 
 
   const handleKeyPress = (event) => {
@@ -240,11 +249,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   const handleKeyPress = (event) => {
     if (event.key === "+") {
-      console.log('fired')
       setFont(font + 1)
     }
     if (event.key === "-") {
-      console.log('fired again')
       setFont(font - 1)
     }
   };
