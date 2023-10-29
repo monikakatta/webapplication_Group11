@@ -299,7 +299,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
          
           .recharts-layer path {
             background-color: ${isVisualComfortMode1 ? "#333" : "#fff"};
-            fill: ${isVisualComfortMode1 ? "#fff" : "#000"};
+            fill: ${isVisualComfortMode1 ? "#008000" : "#ff0000"};
           }
           .list-style-ol{
             color: ${isVisualComfortMode1 ? "#fff" : "#333"}
