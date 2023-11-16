@@ -1,4 +1,5 @@
 
+
 import { createSlice } from '@reduxjs/toolkit';
 
 const excelDataSlice = createSlice({
@@ -10,7 +11,6 @@ const excelDataSlice = createSlice({
     weight: 400,
     fontFamily: 'Times New Roman, Times, serif'
   },
-  
   reducers: {
     setExcelDataGlo: (state, action) => {
       state.data = action.payload;
@@ -29,7 +29,6 @@ const excelDataSlice = createSlice({
     fontFamilyMode: (state, action) => {
       state.fontFamily = action.payload
     }
-
   },
 });
 

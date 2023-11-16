@@ -8,11 +8,13 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  PieChart,
+  Pie,
+  Cell
 } from "recharts";
 import HeaderButton from "../header/HeaderButton";
 import './graph.css';
 import useSpeech from "../keyboardShorcut/textToSpeech";
-
 
 const BarGraphEle = () => {
   const { stopSpeech } = useSpeech()
@@ -20,9 +22,6 @@ const BarGraphEle = () => {
   const [xColumn, setXColumn] = useState('');
   const [yColumn, setYColumn] = useState('');
   const [speaking, setSpeaking] = useState(false);
-
-
-
 
   const handleXaxis = (val) => {
     setXColumn(val);
@@ -54,8 +53,15 @@ const BarGraphEle = () => {
     }
   };
 
-
-
+  const speakText = (text) => {
+    if ("speechSynthesis" in window) {
+      const speechSynthesis = window.speechSynthesis;
+      const speechText = new SpeechSynthesisUtterance(text);
+      speechSynthesis.speak(speechText);
+    } else {
+      console.error("Text-to-speech not supported in this browser.");
+    }
+  };
 
   const readSelectedData = () => {
     alert('You are in Undisturb Mode')
@@ -71,19 +77,22 @@ const BarGraphEle = () => {
         : 'No data selected.';
 
       const text = `${dataDescription} X-axis: ${xColumn}, Y-axis: ${yColumn}.`;
-      const speakText = (text) => {
-        if ("speechSynthesis" in window) {
-          const speechSynthesis = window.speechSynthesis;
-          const speechText = new SpeechSynthesisUtterance(text);
-          speechSynthesis.speak(speechText);
-        } else {
-          console.error("Text-to-speech not supported in this browser.");
-        }
-      };
       speakText(text);
       setSpeaking(true);
     }
   };
+
+  const pieChartData = filteredData.map(entry => ({
+    name: entry.xValue,
+    value: entry.yValue,
+  }));
+
+  // useEffect hook to speak welcome message on component mount
+  useEffect(() => {
+    speakText("Welcome to the Bar Graph page.");
+  }, []);
+
+
 
 
   useEffect(() => {
@@ -96,8 +105,55 @@ const BarGraphEle = () => {
     };
   }, [xColumn, yColumn]);
 
+  const SimplePieChart = () => {
+    const [showPieChart, setShowPieChart] = useState(false);
+
+    const data = [
+      { name: "A", value: 400 },
+      { name: "B", value: 300 },
+      { name: "C", value: 300 },
+      { name: "D", value: 200 },
+    ];
+
+    const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#AF19FF", "#FF19E0", "#FF195E", "#19FFB2", "#197DFF"];
+
+    const renderPieChart = () => {
+      setShowPieChart(true);
+    };
+
+    return (
+      <div>
+        <button onClick={renderPieChart}>Show Pie Chart</button>
+        {showPieChart && (
+          <div className="pie-chart">
+            <h3>Simple Pie Chart</h3>
+            <PieChart width={400} height={400}>
+              <Pie
+                data={pieChartData.slice(0,25)}
+                dataKey="value"
+                nameKey="name"
+                cx={200}
+                cy={200}
+                innerRadius={60}
+                outerRadius={100}
+                fill= "#8884d8"
+                paddingAngle={5}
+              >
+                {pieChartData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
+          </div>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div className="barpage">
+    <>
       <HeaderButton />
       {excelData.length > 0 && <button
         onClick={readSelectedData}
@@ -120,20 +176,20 @@ const BarGraphEle = () => {
             axis='X-Axis'
             excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
             onClick={handleXaxis}
-            selectedColumn={xColumn}   //fixed the all files working
+            selectedColumn={xColumn}
           />
           <ColumnSelectComp
             axis='Y-Axis'
             excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
             onClick={handleYaxis}
-            selectedColumn={yColumn} //fixed the all files working 
+            selectedColumn={yColumn}
           />
 
         </div>
         <div className="graph">
           <h3>Bar Graph Element</h3>
           <br />
-          <BarChart  width={1000} height={420} data={filteredData} style={{ margin: 'auto' }}>
+          <BarChart width={1000} height={420} data={filteredData.slice(0,100)} style={{ margin: 'auto' }}>
             <CartesianGrid
               vertical={true}
               horizontal={false}
@@ -142,28 +198,28 @@ const BarGraphEle = () => {
             />
             <XAxis
               dataKey="xValue"
-              label={{ value: "X-Axis", position: "Bottom"}}
+              label={{ value: "X-Axis", position: "insideBottom" }}
               tick={{ fill: "#a0bad3" }}
 
             />
-           <YAxis
+            <YAxis
               label={{
                 value: "Y-Axis",
                 angle: -90,
-                position: "Left",
-                
+                position: "insideLeft",
               }}
               tick={{ fill: "#a0bad3" }}
             />
             <Tooltip />
             <Legend />
-            <Bar dataKey="yValue" fill="#a0bad3" />
+            <Bar dataKey="yValue" fill="white" />
           </BarChart>
+          <SimplePieChart/>
         </div>
         <br />
         <br />
       </div>
-    </div>
+    </>    
   );
 };
 
@@ -191,4 +247,6 @@ const ColumnSelectComp = ({ excelData, axis, onClick, selectedColumn }) => {
     </>
   );
 };
+
 export { ColumnSelectComp }
+

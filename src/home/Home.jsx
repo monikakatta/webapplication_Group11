@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
-import Papa from "papaparse";
 import "./home.css";
 import { Box } from "@chakra-ui/react";
 import { useEffect } from "react";
@@ -9,7 +8,6 @@ const Home = () => {
   const [excelFileError, setExcelFileError] = useState(null);
   const [excelData, setExcelData] = useState([]);
   const [displayedData, setDisplayedData] = useState([]);
-
   const handleFile = (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) {
@@ -18,43 +16,23 @@ const Home = () => {
     }
 
     const fileReader = new FileReader();
-    fileReader.onload = (e) => {
-      const data = e.target.result;
-      const fileName = selectedFile.name.toLowerCase();
+    fileReader.readAsArrayBuffer(selectedFile);
 
-      if (fileName.endsWith(".xlsx") || fileName.endsWith(".xls")) {
-        // Handle XLSX files
-        const arrayBuffer = new Uint8Array(data);
-        const workbook = XLSX.read(arrayBuffer, { type: "array" });
-        const worksheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[worksheetName];
-        const jsonData = XLSX.utils.sheet_to_json(worksheet);
-        updateExcelData(jsonData);
-      } else if (fileName.endsWith(".csv")) {
-        // Handle CSV files
-        Papa.parse(data, {
-          header: true,
-          skipEmptyLines: true,
-          complete: (result) => {
-            const csvData = result.data;
-            updateExcelData(csvData);
-          },
-          error: () => {
-            setExcelFileError("Error parsing the CSV file.");
-          },
-        });
-      } else {
-        setExcelFileError("Invalid file type. Please select a .xlsx, .xls, or .csv file.");
-      }
+    fileReader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+      const worksheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[worksheetName];
+      const jsonData = XLSX.utils.sheet_to_json(worksheet);
+      setExcelData(jsonData.slice(0, 100)); // Limit to the top 100 rows
+      setDisplayedData(jsonData.slice(0, 100)); // Initial display
+
+      setExcelFileError(null);
     };
 
-    fileReader.readAsArrayBuffer(selectedFile);
-  };
-  const updateExcelData = (data) => {
-    const limitedData = data.slice(0, 100); // Limit to the top 100 rows
-    setExcelData(limitedData);
-    setDisplayedData(limitedData);
-    setExcelFileError(null);
+    fileReader.onerror = () => {
+      setExcelFileError("Error reading the file.");
+    };
   };
 
   useEffect(() => {});
@@ -63,14 +41,14 @@ const Home = () => {
     <>
       <div className="outBox">
         <Box>
-          <h2>Upload Excel or CSV file</h2>
+          <h2>Upload Excel file</h2>
           <div className="main">
             <form className="form-group" autoComplete="off">
               <br></br>
               <input
                 type="file"
                 className="form-control"
-                accept=".xlsx, .xls, .csv, .text/csv" // Updated to accept both file types
+                accept=".xlsx,.xls"
                 onChange={handleFile}
                 required
               ></input>
@@ -85,11 +63,11 @@ const Home = () => {
           </div>
           <br></br>
           <div className="viewer">
-            <h5>View Excel or CSV file</h5>
+            <h5>View Excel file</h5>
             {excelData.length === 0 && <>No file selected</>}
             {excelData.length > 0 && (
-              <div className="table-responsive">
-                <table className="table">
+              <div className="table-responsive-lg">
+                <table className="table ">
                   <thead>
                     <tr>
                       {Object.keys(excelData[0]).map((header, index) => (

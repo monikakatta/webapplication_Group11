@@ -13,7 +13,6 @@ import { Box } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { ColumnSelectComp } from "../BarGraph/BarGraphEle";
 import useSpeech from "../keyboardShorcut/textToSpeech";
-import './Statical.css'
 
 const Statistical = () => {
   const { stopSpeech } = useSpeech()
@@ -22,6 +21,8 @@ const Statistical = () => {
   const [mean, setMean] = useState(null);
   const [mode, setMode] = useState(null);
   const [xColumn, setXColumn] = useState('');
+
+
 
   useEffect(() => {
     const counts = {};
@@ -71,21 +72,23 @@ const Statistical = () => {
   }, [excelData]);
 
   const handleAudibleDescription = () => {
+    // alert("It's in undisturbed mode")
     if (window.speechSynthesis) {
-      const totalRecords = excelData.length;
-      const totalJobTitles = Object.keys(jobTitleCounts).length;
-      const speechText = generateAudibleDescription(mode, totalRecords, totalJobTitles);
+      const speechText = generateAudibleDescription();
       const utterance = new SpeechSynthesisUtterance(speechText);
       window.speechSynthesis.speak(utterance);
     }
   };
 
-  const generateAudibleDescription = (mode, totalRecords, totalJobTitles) => {
-    alert('You are in Undisturb Mode');
-    
+  const generateAudibleDescription = () => {
+    alert('You are in Undisturb Mode')
+    const totalRecords = excelData.length;
+    const totalJobTitles = Object.keys(jobTitleCounts).length;
     const mostCommonJobTitle = mode ? `The most common records ${mode}.` : 'There is no predominant job title.';
-    const description = `There are ${totalRecords} records and ${totalJobTitles} most records are in the data is ${mostCommonJobTitle} The data consists of ${totalRecords} rows and ${totalRecords > 0 ? Object.keys(excelData[0]).length : 0} columns. Thanks `;
-  
+    const description = `There are ${totalRecords} records and ${totalJobTitles} most records are in the data is ${mostCommonJobTitle} The data consists of ${excelData.length} rows and ${excelData.length > 0 ? Object.keys(excelData[0]).length : 0} columns. Thanks `;
+
+
+
     return description;
   };
 
@@ -114,9 +117,9 @@ const Statistical = () => {
   }, []);
 
   return (
-    <div className="Staticalpage">
+    <>
       <HeaderButton />
-      
+
       <ol className="m-auto" style={{ margin: 'auto', width: 'fit-content', padding: '10px' }}>
         <li>Total No of Records in Excel Sheet : - {excelData.length}</li>
         <li>Total No :- {Object.keys(jobTitleCounts).length}</li>
@@ -138,7 +141,7 @@ const Statistical = () => {
           left: '50%'
         }}
       >
-        Audible Statistics
+        Audible Statical
       </button>}
       <div className="graph-container">
         <div className="box-1">
@@ -146,7 +149,7 @@ const Statistical = () => {
             axis='Select Column'
             excelData={excelData.length > 0 ? excelData : 'No Excel Sheet'}
             onClick={handleXaxis}
-            selectedColumn={xColumn} //fixed the all files working
+            selectedColumn={xColumn}
           />
           {/* <ColumnSelectComp
             axis='Y-Axis'
@@ -180,7 +183,7 @@ const Statistical = () => {
                       {Object.keys(jobTitleCounts).map((jobTitle, index) => (
 
                         <TableRow key={index}>
-                          {/* {console.log(jobTitle)}   //removed for sample file data */}
+                          {/* {console.log(jobTitle)} */}
                           <TableCell>{jobTitle}</TableCell>
                           <TableCell>{jobTitleCounts[jobTitle]}</TableCell>
                           <TableCell>{(jobTitleCounts[jobTitle] * 100 / excelData.length).toFixed(2)}</TableCell>
@@ -196,8 +199,8 @@ const Statistical = () => {
 
       </div>
 
-    </div>
+    </>
   );
 };
 
-export default Statistical; 
+export default Statistical;

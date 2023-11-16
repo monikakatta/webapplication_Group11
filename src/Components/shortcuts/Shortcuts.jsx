@@ -1,37 +1,30 @@
-import { useNavigate } from "react-router-dom";
-import ListComp from "../ListComp/ListComp";
+
 import HeaderButton from "../header/HeaderButton";
-import useSpeech from "../keyboardShorcut/textToSpeech";
-import { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useState } from "react";
-import './Shortcuts.css';
+
+
 
 const Shorcuts = () => {
-    const navigationList = [
-        "Home Press h",
-        "Female Read Loud Press f",
-        "Stop Voiceover b",
-        "Male Voice Loud Press m",
-        "ShortCuts Press s",
-        "Statistical Calculator c",
-        "Add New File n",
-        "Bar Graph Visualization ctrl + b",
-        "Audiable Bar Graph a",
-    ];
+
+
 
     return (
-        <div className="Shortcutpage">
+        <>
             <HeaderButton name="spring1" />
             <div className="container-he">
-                <ol className='list-style-ol'>
-                    {navigationList.map((item, index) => (
-                        <li key={index}>{item}</li>
-                    ))}
+                <ol className='list-style-ol' >
+                    <li>Home Press H</li>
+                    <li>Female Read Loud Press F</li>
+                    <li>Male Voice Loud Press M</li>
+                    <li>ShortCuts Press S</li>
+                    <li>Statistical Calculator c</li>
+                    <li>Graph Visualization Ctrl+B</li>
+                    <li>New File Upload N</li>
+                    <li>Statistical Clarity x</li>
+                    <li>Audioable Graph :- Graph Visualization {'-> '} Select X and Y Axis {'-> '} Press Audio Graph Button or Press A</li>
                 </ol>
             </div>
-        </div>
+        </>
     )
 }
 
-export default Shorcuts;
+export default Shorcuts

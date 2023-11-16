@@ -31,9 +31,15 @@ body {
     position: fixed;
     top: 0;
     left: -100%;
-    z-index: 1;
+    z-index: 2000;
     transition: 0.5s;
 }
+
+.css-15wwp11-MuiTableHead-root{
+    z-index: 20;
+    
+}
+
 .sidebar.active{
     left: 0;
 }
@@ -53,6 +59,7 @@ body {
     transition: 0.5s;
     opacity: 0;
     visibility: hidden;
+    z-index: 200;
 }
 .sidebar-overlay.active{
     opacity: 1;
@@ -125,3 +132,34 @@ body {
 .fa-magnifying-glass-minus{
     font-size: 1.5rem;
 }
+
+
+
+
+
+/* shortcut css */
+
+/* Shortcuts.css */
+
+.list-style-ol {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.list-style-ol li {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+    background-color: #f7f7f7;
+    padding: 10px;
+    padding-left: 26px;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1);
+}
+
+.list-style-ol li:hover {
+    background-color: #3498db; /* Change the color on hover */
+    color: #fff;
+}
+
+/* Add more CSS styles as needed to make it look better */
