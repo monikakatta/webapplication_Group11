@@ -3,11 +3,23 @@ import * as XLSX from "xlsx";
 import "./home.css";
 import { Box } from "@chakra-ui/react";
 import { useEffect } from "react";
-
+import useSpeech from "../keyboardShorcut/textToSpeech";
 const Home = () => {
   const [excelFileError, setExcelFileError] = useState(null);
   const [excelData, setExcelData] = useState([]);
   const [displayedData, setDisplayedData] = useState([]);
+  const speakText = (text, voiceIndex) => {
+    // console.log(text)
+    const cleaned = text.replace(/[^a-zA-Z0-9\s]/g, "");
+    if (speechSynthesis) {
+      // console.log(text)
+      const voices = speechSynthesis.getVoices();
+      const utterance = new SpeechSynthesisUtterance(cleaned);
+      utterance.voice = voices[voiceIndex];
+      speechSynthesis.speak(utterance);
+    }
+  };
+
   const handleFile = (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) {
@@ -26,7 +38,7 @@ const Home = () => {
       const jsonData = XLSX.utils.sheet_to_json(worksheet);
       setExcelData(jsonData.slice(0, 100)); // Limit to the top 100 rows
       setDisplayedData(jsonData.slice(0, 100)); // Initial display
-
+      speakText("File uploaded successfully. You can now explore the data.",1);
       setExcelFileError(null);
     };
 

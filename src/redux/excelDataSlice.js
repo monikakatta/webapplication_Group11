@@ -31,6 +31,7 @@ const excelDataSlice = createSlice({
       state.fontFamily = action.payload
     },
     setUndisturbed: (state, action) => {
+      console.log("Undisturbed action payload:", action.payload);
       state.undisturbed = action.payload; // Action to set undisturbed mode
     },
   },

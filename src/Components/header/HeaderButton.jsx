@@ -2,7 +2,7 @@ import { Box } from "@chakra-ui/react";
 import useSpeech from "../keyboardShorcut/textToSpeech";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import './sidebar.css'
 import { fontMode, setExcelDataGlo, visualMode, weightMode, setUndisturbed} from "../../redux/excelDataSlice";
@@ -36,7 +36,7 @@ const HeaderButton = ( { name } ) => {
   // console.log(location)
 
   function handleNavigator(val) {
-    console.log(undisturbed);
+  //  console.log(undisturbed);
     navigate(val);
   }
   const handleButtonClick = () => {
@@ -82,67 +82,60 @@ const HeaderButton = ( { name } ) => {
     }
   }
 
-
-  const handleKeyPress = (event) => {
-    
-    if (event.key === "f") {
-      if(undisturbed)      {
-        alert("You are in undisturbed mode");
+    const handleKeyPress = (event) => {
+      if (event.key === "f" || event.key==="m") {
+        console.log(undisturbed);
+        if (undisturbed) {
+          speakText("you are in undisturbed mode.cannot read out data.");
+          //alert("You are in undisturbed mode.");
+          
+        } 
+        else {
+          const limitedData = excelData.slice(0, 100);
+          const jsonLimitedData = JSON.stringify(limitedData);
+          if(event.key==="f")
+          speakText(jsonLimitedData, 2);
+          else speakText(jsonLimitedData, 1);
+        }
       }
-      else {
-      const limitedData = excelData.slice(0, 100); // Extract the first 100 rows of data
-      const jsonLimitedData = JSON.stringify(limitedData);
-      
-      speakText(jsonLimitedData, 2); // Trigger female voice speech
+      /*if (event.key === "m") {
+        if (undisturbed) {
+          speakText("you are in undisturbed mode.cannot read out data.");
+          alert("You are in undisturbed mode");
+        } else {
+          const limitedData = excelData.slice(0, 100);
+          const jsonLimitedData = JSON.stringify(limitedData);
+          speakText(jsonLimitedData, 1);
+        }
+      }*/
+      if (event.key === "b") {
+        stopSpeech();
       }
-    }
-    if (event.key === "m") {
-      if(undisturbed){
-        alert("You are in undisturbed mode");
+      if (event.ctrlKey && event.key === 'b') {
+        navigate('/bargraph');
       }
-      else{
-      const limitedData = excelData.slice(0, 100); // Extract the first 100 rows of data
-      const jsonLimitedData = JSON.stringify(limitedData);
-      // setSpeech(jsonLimitedData)
-      // console.log('f')
-      speakText(jsonLimitedData, 1);
-    }
-  }
-    if (event.key === "b") {
-      stopSpeech(); // Trigger voice stop
-    }
-    if (event.ctrlKey && event.key === 'b') {
-      // Handle Ctrl + B for bar chart
-      navigate('/bargraph')
-    }
-    if (event.key === 'x') {
-      // Handle Ctrl + c for bar chart
-      if(undisturbed){
-        alert("You are in undisturbed mode");
+      if (event.key === 'x') {
+        if (undisturbed) {
+          alert("You are in undisturbed mode");
+        } else {
+          handleStaticalClarity();
+        }
       }
-      else{
-      handleStaticalClarity();
+      if (event.key === 'h') {
+        navigate('/');
       }
-    }
-    if (event.key === 'h') {
-
-      navigate('/')
-    }
-    if (event.key === 'c') {
-
-      navigate('/statistics')
-    }
-    if (event.key === 's') {
-
-      navigate('/shortcuts')
-    }
-    if (event.key === 'n') {
-
-      dispatch(setExcelDataGlo([]));
-      handleNavigator("/")
-    }
-  };
-
+      if (event.key === 'c') {
+        navigate('/statistics');
+      }
+      if (event.key === 's') {
+        navigate('/shortcuts');
+      }
+      if (event.key === 'n') {
+        dispatch(setExcelDataGlo([]));
+        handleNavigator("/");
+      }
+    };
+  
 
 
   useEffect(() => {
@@ -160,7 +153,7 @@ const HeaderButton = ( { name } ) => {
     };
 
 
-  },[excelData]);
+  },[excelData,undisturbed, excelData, dispatch, navigate,speakText]);
 
 
   const [isOpen, setIsopen] = useState(false);
@@ -226,7 +219,9 @@ const HeaderButton = ( { name } ) => {
               backgroundColor={statical ? "#56829a" : "#a0bad3"}
               onClick={(e) => { 
                 if(undisturbed){
+                  speakText("you are in undisturbed mode");
                   alert("you are in undisturbed mode");
+                  
                 }
                 else{
                 handleStaticalClarity(e);

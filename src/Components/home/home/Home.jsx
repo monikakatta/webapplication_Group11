@@ -23,7 +23,17 @@ import { setExcelDataGlo } from "../../../redux/excelDataSlice";
 const Home = () => {
   const dispatch = useDispatch();
   const reduxExcelData  = useSelector((state) => state.excelData.data);
-  
+  const speakText = (text, voiceIndex) => {
+    // console.log(text)
+    const cleaned = text.replace(/[^a-zA-Z0-9\s]/g, "");
+    if (speechSynthesis) {
+      // console.log(text)
+      const voices = speechSynthesis.getVoices();
+      const utterance = new SpeechSynthesisUtterance(cleaned);
+      utterance.voice = voices[voiceIndex];
+      speechSynthesis.speak(utterance);
+    }
+  };
   const [excelFileError, setExcelFileError] = useState(null);
   const [excelData, setExcelData] = useState([]);
   const [displayedData, setDisplayedData] = useState([]);
@@ -44,10 +54,11 @@ const Home = () => {
 
     if (!isValidExtension) {
       setExcelFileError("Invalid file type. Please select a .xlsx, .xls file.");
+      speakText("Invalid file type. Please select a .xlsx, .xls file.",1);
       // setExcelFileError(null);
       return;
     }
-
+    
     const fileReader = new FileReader();
     fileReader.readAsArrayBuffer(selectedFile);
     fileReader.onload = (e) => {
@@ -60,6 +71,8 @@ const Home = () => {
       setDisplayedData(jsonData.slice(0, 100)); // Initial display
       dispatch(setExcelDataGlo(jsonData));
       setExcelFileError(null);
+      speakText("File uploaded successfully. You can now explore the data.",1);
+      speakText("Home Press H ,Female Read Loud Press F ,Male Voice Loud Press M ,ShortCuts Press S ,Statistical Calculator c,Graph Visualization B ,New File Upload N ,Statistical Clarity x ,Audioable Graph :- Graph Visualization {'-> '} Select X and Y Axis {'-> '} Press Audio Graph Button or Press A ",1);
     };
     fileReader.onerror = () => {
       setExcelFileError("Error reading the file.");
