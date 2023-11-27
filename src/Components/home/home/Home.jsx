@@ -23,7 +23,7 @@ import { setExcelDataGlo } from "../../../redux/excelDataSlice";
 const Home = () => {
   const dispatch = useDispatch();
   const reduxExcelData  = useSelector((state) => state.excelData.data);
-
+  
   const [excelFileError, setExcelFileError] = useState(null);
   const [excelData, setExcelData] = useState([]);
   const [displayedData, setDisplayedData] = useState([]);
@@ -81,7 +81,7 @@ const Home = () => {
   return (
     <>
       <div className="outBox">
-        <HeaderButton />
+        <HeaderButton/>
         <Box>
           {/* <div className="main">
             <form className="form-group" autoComplete="off">

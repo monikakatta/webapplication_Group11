@@ -46,3 +46,14 @@
 .selected {
     background-color: rgb(160, 186, 211);
 }
+.linegraph{
+    margin-top: -10%;
+    margin-left: 340px;
+}
+.piechart{
+    margin-left: 700px;
+}
+.pie-chart{
+    margin-top:-10%;
+    
+}

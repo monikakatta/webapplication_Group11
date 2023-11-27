@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
+  LineChart,
+  Line,
   BarChart,
   Bar,
   XAxis,
@@ -15,6 +17,7 @@ import {
 import HeaderButton from "../header/HeaderButton";
 import './graph.css';
 import useSpeech from "../keyboardShorcut/textToSpeech";
+import * as ReactDOM from "react-dom";
 
 const BarGraphEle = () => {
   const { stopSpeech } = useSpeech()
@@ -22,6 +25,7 @@ const BarGraphEle = () => {
   const [xColumn, setXColumn] = useState('');
   const [yColumn, setYColumn] = useState('');
   const [speaking, setSpeaking] = useState(false);
+  const [undisturbed, setUndisturbed] = useState(false); 
 
   const handleXaxis = (val) => {
     setXColumn(val);
@@ -64,7 +68,7 @@ const BarGraphEle = () => {
   };
 
   const readSelectedData = () => {
-    alert('You are in Undisturb Mode')
+    // alert('You are in Undisturb Mode')
     if (xColumn && yColumn) {
       const uniqueXValues = Array.from(new Set(filteredData.map(item => item.xValue)));
       const selectedData = uniqueXValues.map(xValue => {
@@ -89,7 +93,7 @@ const BarGraphEle = () => {
 
   // useEffect hook to speak welcome message on component mount
   useEffect(() => {
-    speakText("Welcome to the Bar Graph page.");
+    //speakText("Welcome to the Bar Graph page.");
   }, []);
 
 
@@ -123,13 +127,14 @@ const BarGraphEle = () => {
 
     return (
       <div>
-        <button onClick={renderPieChart}>Show Pie Chart</button>
-        {showPieChart && (
+        <h3>Pie Chart Visualization</h3>
+        {/* <button onClick={renderPieChart}>Show Pie Chart</button>
+        {showPieChart && ( */}
           <div className="pie-chart">
-            <h3>Simple Pie Chart</h3>
+            
             <PieChart width={400} height={400}>
               <Pie
-                data={pieChartData.slice(0,25)}
+                data={pieChartData.slice(0,12)}
                 dataKey="value"
                 nameKey="name"
                 cx={200}
@@ -143,18 +148,20 @@ const BarGraphEle = () => {
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip
+              
+               />
               <Legend />
             </PieChart>
           </div>
-        )}
+        {/* )} */}
       </div>
     );
   };
 
   return (
     <>
-      <HeaderButton />
+      <HeaderButton undisturbed={undisturbed} setUndisturbed={setUndisturbed}/>
       {excelData.length > 0 && <button
         onClick={readSelectedData}
         style={{
@@ -212,14 +219,35 @@ const BarGraphEle = () => {
             />
             <Tooltip />
             <Legend />
-            <Bar dataKey="yValue" fill="white" />
+            <Bar dataKey="xValue" fill="#a0bad3" barSize={30}/>
+            <Bar dataKey="yValue" fill="#a0bad3" barSize={30} />
+            
           </BarChart>
-          <SimplePieChart/>
+           <br/>
+          
         </div>
-        <br />
-        <br />
-      </div>
-    </>    
+        </div>
+        
+        
+      
+      <div className="linegraph">
+      <center><h3>Line Graph Element</h3></center>
+          <LineChart width={1000} height={420} data={filteredData.slice(0, 100)}>
+            <CartesianGrid strokeDasharray="1 1" />
+            <XAxis dataKey="xValue" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="yValue" stroke="#8884d8" />
+            <Line type="monotone" dataKey="xValue" stroke="#8884d8" />
+          </LineChart>
+          
+    </div>
+    <div className="piechart">
+    <SimplePieChart/>
+    </div>
+
+</>
   );
 };
 
@@ -249,4 +277,3 @@ const ColumnSelectComp = ({ excelData, axis, onClick, selectedColumn }) => {
 };
 
 export { ColumnSelectComp }
-

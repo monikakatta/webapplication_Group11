@@ -9,7 +9,8 @@ const excelDataSlice = createSlice({
     mode: false,
     font: 15,
     weight: 400,
-    fontFamily: 'Times New Roman, Times, serif'
+    fontFamily: 'Times New Roman, Times, serif',
+    undisturbed: false,
   },
   reducers: {
     setExcelDataGlo: (state, action) => {
@@ -28,10 +29,13 @@ const excelDataSlice = createSlice({
     },
     fontFamilyMode: (state, action) => {
       state.fontFamily = action.payload
-    }
+    },
+    setUndisturbed: (state, action) => {
+      state.undisturbed = action.payload; // Action to set undisturbed mode
+    },
   },
 });
 
-export const { setExcelDataGlo, visualMode, fontFamily, weightMode, fontMode } = excelDataSlice.actions;
+export const { setExcelDataGlo, visualMode, fontFamily, weightMode, fontMode, setUndisturbed } = excelDataSlice.actions;
 
 export default excelDataSlice.reducer;

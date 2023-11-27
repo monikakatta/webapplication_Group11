@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import './sidebar.css'
-import { fontMode, setExcelDataGlo, visualMode, weightMode } from "../../redux/excelDataSlice";
+import { fontMode, setExcelDataGlo, visualMode, weightMode, setUndisturbed} from "../../redux/excelDataSlice";
 import Home from "../home/home/Home";
 
 const speakWelcome = (text) => {
@@ -13,11 +13,11 @@ const speakWelcome = (text) => {
   window.speechSynthesis.speak(utterance);
 };
 
-const HeaderButton = ({ name }) => {
+const HeaderButton = ( { name } ) => {
 
 
   const location = useLocation();
-
+  const undisturbed = useSelector((state) => state.excelData.undisturbed);
   const isButtonActive = (route) => location.pathname === route;
 
   const dispatch = useDispatch()
@@ -36,9 +36,18 @@ const HeaderButton = ({ name }) => {
   // console.log(location)
 
   function handleNavigator(val) {
+    console.log(undisturbed);
     navigate(val);
   }
-
+  const handleButtonClick = () => {
+    // Perform any other actions if needed
+    // dispatch(setUndisturbed(undisturbed));
+    const newUndisturbedValue = !undisturbed;
+    dispatch(setUndisturbed(newUndisturbedValue));
+    
+    stopSpeech();
+  };
+  
   // Function to speak text
   const speakText = (text, voiceIndex) => {
     // console.log(text)
@@ -75,24 +84,30 @@ const HeaderButton = ({ name }) => {
 
 
   const handleKeyPress = (event) => {
+    
     if (event.key === "f") {
-      console.log('firing')
-      alert('You are in Undisturb Mode')
-      // console.log(JSON.stringify(excelData))
+      if(undisturbed)      {
+        alert("You are in undisturbed mode");
+      }
+      else {
       const limitedData = excelData.slice(0, 100); // Extract the first 100 rows of data
       const jsonLimitedData = JSON.stringify(limitedData);
-      // setSpeech(jsonLimitedData)
-      // console.log('f')
+      
       speakText(jsonLimitedData, 2); // Trigger female voice speech
+      }
     }
     if (event.key === "m") {
-      alert('You are in Undisturb Mode')
+      if(undisturbed){
+        alert("You are in undisturbed mode");
+      }
+      else{
       const limitedData = excelData.slice(0, 100); // Extract the first 100 rows of data
       const jsonLimitedData = JSON.stringify(limitedData);
       // setSpeech(jsonLimitedData)
       // console.log('f')
       speakText(jsonLimitedData, 1);
     }
+  }
     if (event.key === "b") {
       stopSpeech(); // Trigger voice stop
     }
@@ -102,7 +117,12 @@ const HeaderButton = ({ name }) => {
     }
     if (event.key === 'x') {
       // Handle Ctrl + c for bar chart
-      handleStaticalClarity()
+      if(undisturbed){
+        alert("You are in undisturbed mode");
+      }
+      else{
+      handleStaticalClarity();
+      }
     }
     if (event.key === 'h') {
 
@@ -128,6 +148,7 @@ const HeaderButton = ({ name }) => {
   useEffect(() => {
     // console.log(name)
     // setTextData(excelData)
+    
     setSpeechSynthesis(window.speechSynthesis);
 
 
@@ -139,14 +160,16 @@ const HeaderButton = ({ name }) => {
     };
 
 
-  }, [excelData]);
+  },[excelData]);
 
 
   const [isOpen, setIsopen] = useState(false);
 
   const ToggleSidebar = () => {
     isOpen === true ? setIsopen(false) : setIsopen(true);
+    
   }
+ 
 
 
 
@@ -159,13 +182,18 @@ const HeaderButton = ({ name }) => {
         onKeyPress={handleKeyPress} // Handle key press events
       >
 
+<center><h1 style={{ color:"#a0bad3" }}>Inclusivity in Data Visualization</h1></center>
 
         <Box className="">
           <div className="topButtons navbar">
             <Button
               text="bar graph visualisation"
               backgroundColor={isButtonActive("/bargraph") ? "#56829a" : "#a0bad3"}
-              onClick={() => handleNavigator("/bargraph")}
+              onClick={() =>
+                {
+                  speakWelcome("You are in Visualization Page. Please select xvalue and yvalue");
+                   handleNavigator("/bargraph")}
+                }
             />
             <Button
               text="focused typography"
@@ -196,15 +224,34 @@ const HeaderButton = ({ name }) => {
 
             <Button text="Statistical Clarity"
               backgroundColor={statical ? "#56829a" : "#a0bad3"}
-              onClick={(e) => {
-                handleStaticalClarity(e)
-                setStatical(!statical)
+              onClick={(e) => { 
+                if(undisturbed){
+                  alert("you are in undisturbed mode");
+                }
+                else{
+                handleStaticalClarity(e);
+                setStatical(!statical);
+                }
               }}
             />
-            <Button text="undisturbed mode"
-              onClick={() => {stopSpeech();speakWelcome("Now you're in Undisturbed mode!");}}
-            />
-            <Button text="Home" onClick={() => {handleNavigator("/"); speakWelcome("Welcome to Home Page");}} backgroundColor={isButtonActive("/") ? "#56829a" : "#a0bad3"} />
+            <Button
+              
+        text="Undisturbed Mode"
+        backgroundColor={undisturbed ? "#56829a" : "#a0bad3"}
+        onClick={(e) =>{
+          
+          handleButtonClick();
+          //alert("you are in undisturbed mode");
+        }}
+    
+    
+  
+     
+            
+    
+  
+  />
+            <Button text="Home" onClick={() => {handleNavigator("/"); speakWelcome("Welcome to Home Page.");}} backgroundColor={isButtonActive("/") ? "#56829a" : "#a0bad3"} />
             {/* <div className="dropdown-item">
             <Button text="readout loud"
               backgroundColor={isButtonActive("/shortcuts") ? "#56829a" : "#a0bad3"}
@@ -313,10 +360,10 @@ const Sidebar = ({ isOpen, ToggleSidebar }) => {
             color: ${isVisualComfortMode1 ? "#fff" : "#000"};
           }
          
-          .recharts-layer path {
-            background-color: ${isVisualComfortMode1 ? "#333" : "#fff"};
-            fill: ${isVisualComfortMode1 ? "#fff" : "#000"};
-          }
+          // .recharts-layer path {
+          //   background-color: ${isVisualComfortMode1 ? "#333" : "#fff"};
+          //   fill: ${isVisualComfortMode1 ? "#fff" : "#000"};
+          // }
           .list-style-ol{
             color: ${isVisualComfortMode1 ? "#fff" : "#333"}
           }
@@ -432,5 +479,3 @@ const Sidebar = ({ isOpen, ToggleSidebar }) => {
     </>
   )
 }
-
-

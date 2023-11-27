@@ -81,7 +81,7 @@ const Statistical = () => {
   };
 
   const generateAudibleDescription = () => {
-    alert('You are in Undisturb Mode')
+    // alert('You are in Undisturb Mode')
     const totalRecords = excelData.length;
     const totalJobTitles = Object.keys(jobTitleCounts).length;
     const mostCommonJobTitle = mode ? `The most common records ${mode}.` : 'There is no predominant job title.';
